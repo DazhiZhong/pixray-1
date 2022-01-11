@@ -61,8 +61,8 @@ class CLIP_Base():
         self.output_dim = self.model.visual.output_dim
 
         self.preprocess_transform = transforms.Compose([
-            transforms.Resize(224),
-            transforms.CenterCrop(224),
+            transforms.Resize(self.input_resolution),
+            transforms.CenterCrop(self.input_resolution),
             transforms.Normalize((0.48145466, 0.4578275, 0.40821073), (0.26862954, 0.26130258, 0.27577711))
             ])
 
