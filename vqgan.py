@@ -10,6 +10,7 @@ import os.path
 import torch
 from torch.nn import functional as F
 from torchvision.transforms import functional as TF
+from util import wget_file
 
 from omegaconf import OmegaConf
 from taming.models import cond_transformer, vqgan
@@ -39,13 +40,6 @@ vqgan_checkpoint_table = {
     "sflckr": 'https://heibox.uni-heidelberg.de/d/73487ab6e5314cb5adba/files/?p=%2Fcheckpoints%2Flast.ckpt&dl=1'
 }
 
-def wget_file(url, out):
-    try:
-        print(f"Downloading {out} from {url}, please wait")
-        output = subprocess.check_output(['wget', '-O', out, url])
-    except subprocess.CalledProcessError as cpe:
-        output = cpe.output
-        print("Ignoring non-zero exit: ", output)
 
 class ReplaceGrad(torch.autograd.Function):
     @staticmethod

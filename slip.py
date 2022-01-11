@@ -1,5 +1,6 @@
 # code adapted from https://github.com/facebookresearch/SLIP/issues/2#issuecomment-1001052198
 
+import os
 import sys
 from collections import OrderedDict
 
@@ -7,7 +8,26 @@ import torch
 import torch.nn as nn
 from torchvision import transforms
 
-from CLIP import clip
+from util import wget_file
+
+try:
+    # installed by adding github.com/openai/CLIP to sys.path
+    from CLIP import clip
+except ImportError:
+    # installed by doing `pip install git+https://github.com/openai/CLIP`
+    from clip import clip
+
+model_to_url =  {
+    "SLIP_VITS16": "https://dl.fbaipublicfiles.com/slip/slip_small_100ep.pt",
+    "SLIP_VITB16": "https://dl.fbaipublicfiles.com/slip/slip_base_100ep.pt",
+    "SLIP_VITL16": "https://dl.fbaipublicfiles.com/slip/slip_large_100ep.pt",
+    "SIMCLR_VITS16": "https://dl.fbaipublicfiles.com/slip/simclr_small_25ep.pt",
+    "CLIP_VITS16": "https://dl.fbaipublicfiles.com/slip/clip_small_25ep.pt",
+    "CLIP_VITB16": "https://dl.fbaipublicfiles.com/slip/clip_base_25ep.pt",
+    "CLIP_VITL16": "https://dl.fbaipublicfiles.com/slip/clip_large_25ep.pt",
+}
+
+
 
 def normalize(img, input_range = None):
     if input_range is None:
@@ -90,6 +110,11 @@ class SLIP_Base():
             ckpt_path = f"models/clip_base_25ep.pt"
         elif model_name == "CLIP_VITL16":
             ckpt_path = f"models/clip_large_25ep.pt"
+        else:
+            raise ValueError(f"No model named {model_name}, use one of the following models: {str(list(model_to_url.keys()))}")
+
+        if not os.path.exists(ckpt_path):
+            wget_file(model_to_url[model_name], ckpt_path)
 
         self.preprocess_transform = transforms.Compose([
             transforms.Resize(224),
