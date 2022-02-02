@@ -66,11 +66,13 @@ from util import map_number, palette_from_string, real_glob
 from vqgan import VqganDrawer
 from vdiff import VdiffDrawer
 from ogvdiff import OGVdiffDrawer
+from dip import DIPDrawer
 
 class_table = {
     "vqgan": VqganDrawer,
     "vdiff": VdiffDrawer,
     "ogvdiff": OGVdiffDrawer,
+    "dip": DIPDrawer,
 }
 
 try:
